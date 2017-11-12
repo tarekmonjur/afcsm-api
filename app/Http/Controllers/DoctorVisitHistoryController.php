@@ -41,14 +41,29 @@ class DoctorVisitHistoryController extends Controller
     }
 
 
+    public function doctorVisitSearch(Request $request)
+    {
+        try{
+            $mr_mobile_no = $request->input('mr_mobile_no');
+            $doctor_mobile_no = $request->input('doctor_mobile_no');
+            $date = $request->input('date');
+
+            $data = $this->doctorVisit->get_doctor_visit_history_search($mr_mobile_no, $doctor_mobile_no, $date);
+            return $this->setReturnMessage($data,'success','OK',200,'Success!','User doctor visit.');
+        }catch (\Exception $e){
+            return $this->setReturnMessage([],'error','NotOK',400,'Error!','Doctor visit not found.');
+        }
+    }
+
+
     private function doctorVisitHistoryValidation($request)
     {
         $validator = Validator::make($request->all(), [
             'doctorFullname' => 'required|max:45',
             'smMobileNo' => 'required|max:11',
             'doctorMobileNo' => 'required|max:11',
-            'smVisitStart' => 'required|date_format:"Y-m-d h:i:s"',
-            'smVisitEnd' => 'required|date_format:"Y-m-d h:i:s"',
+            'smVisitStart' => 'required',
+            'smVisitEnd' => 'required',
         ]);
 
         return $validator;

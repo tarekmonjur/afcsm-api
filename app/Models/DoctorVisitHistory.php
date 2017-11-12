@@ -30,4 +30,34 @@ class DoctorVisitHistory extends Model
         return $data;
     }
 
+
+    public function visitGeo(){
+        return $this->hasMany('App\Models\DoctorVisitHistoryGeo');
+    }
+
+
+
+    public function get_doctor_visit_history_search($mr_mobile_no, $doctor_mobile_no, $date)
+    {
+        $result =  $this->select('id','mr_mobile_no as smMobileNo','doctor_mobile_no as doctorMobileNo',
+            'doctor_fullname as doctorFullname','doctor_designation as doctorDesignation','doctor_education as doctorEducation',
+            'doctor_chamber_name as doctorChamberName','doctor_chamber_address as doctorChamberAddress',
+            'visit_start as smVisitStart','visit_end as smVisitEnd','remarks', 'total_visit_time as totalVisitTime')
+//            ->join('doctor_visit_history_geo','doctor_visit_history_geo.doctor_visit_history_id','=','doctor_visit_histories.id');
+            ->with('visitGeo');
+        if(!empty($mr_mobile_no) && $mr_mobile_no !=null){
+            $result->where('mr_mobile_no', $mr_mobile_no);
+        }
+        if(!empty($doctor_mobile_no) && $doctor_mobile_no !=null){
+            $result->where('doctor_mobile_no', $doctor_mobile_no);
+        }
+        if(!empty($date) && $date !=null){
+            $date = date('Y-m-d', strtotime($date));
+            $result->whereDate('visit_start','>=',$date);
+            $result->whereDate('visit_end','<=',$date);
+        }
+        $data = $result->get();
+        return $data;
+    }
+
 }

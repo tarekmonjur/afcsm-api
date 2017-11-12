@@ -68,6 +68,7 @@ $router->group(['prefix' => env('APP_API_VERSION_0')], function() use ($router){
     $router->delete('/product-experiences/{id}', ['middleware' => 'auth:arr', 'uses' => 'ProductExperienceController@delete']);
 
     $router->get('/doctor-visits/{mr_mobile_no}[/{doctor_mobile_no}]', ['middleware' => 'auth:arr', 'uses' => 'DoctorVisitHistoryController@index']);
+    $router->post('/doctor-visits-search', ['middleware' => 'auth:arr', 'uses' => 'DoctorVisitHistoryController@doctorVisitSearch']);
     $router->post('/doctor-visits', ['middleware' => 'auth:obj', 'uses' => 'DoctorVisitHistoryController@create']);
     $router->post('/doctor-visits-update', ['middleware' => 'auth:obj', 'uses' => 'DoctorVisitHistoryController@update']);
     $router->delete('/doctor-visits/{id}', ['middleware' => 'auth:arr', 'uses' => 'DoctorVisitHistoryController@delete']);
@@ -83,7 +84,6 @@ $router->group(['prefix' => env('APP_API_VERSION_0')], function() use ($router){
     // Report Controller
 //    $router->get('/referral-data/{user_type}/{referral_code}', ['middleware' => 'auth:arr', 'uses' => 'ReportController@referralData']);
     $router->post('/my-mr', ['middleware' => 'auth:arr', 'uses' => 'ReportController@myMrList']);
-    $router->post('/my-doctor-visits', ['middleware' => 'auth:arr', 'uses' => 'ReportController@myDoctorVisit']);
 
 
     $router->post('/mr-verify', ['middleware' => 'auth:arr', 'uses' => 'WebController@mrVerify']);

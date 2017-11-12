@@ -30,10 +30,10 @@ class DoctorVisitHistoryController extends Controller
     }
 
 
-    public function index($mr_mobile_no=null)
+    public function index($mr_mobile_no=null, $doctor_mobile_no=null)
     {
         try{
-            $data = $this->doctorVisit->get_doctor_visit_history($mr_mobile_no);
+            $data = $this->doctorVisit->get_doctor_visit_history($mr_mobile_no, $doctor_mobile_no);
             return $this->setReturnMessage($data,'success','OK',200,'Success!','User doctor visit.');
         }catch (\Exception $e){
             return $this->setReturnMessage([],'error','NotOK',400,'Error!','Doctor visit not found.');

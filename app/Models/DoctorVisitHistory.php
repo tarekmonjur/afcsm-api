@@ -70,6 +70,7 @@ class DoctorVisitHistory extends Model
         $result =  $this->select('id','mr_mobile_no as smMobileNo','doctor_mobile_no as doctorMobileNo',
             'doctor_fullname as doctorFullname','doctor_designation as doctorDesignation','doctor_education as doctorEducation',
             'doctor_chamber_name as doctorChamberName','doctor_chamber_address as doctorChamberAddress',
+            'doctor_chamber_lat as doctorChamberLat','doctor_chamber_long as doctorChamberLong',
             'visit_start as smVisitStart','visit_end as smVisitEnd','remarks', 'total_visit_time as totalVisitTime')
             ->with('visitGeo');
         if(!empty($mr_mobile_no) && $mr_mobile_no !=null){

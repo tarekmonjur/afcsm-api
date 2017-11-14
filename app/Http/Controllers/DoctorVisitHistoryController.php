@@ -51,7 +51,7 @@ class DoctorVisitHistoryController extends Controller
                     $doctorVisitedChamber->doctorChamberAddress = $doctor_chamber->doctor_chamber_address;
                     $doctorVisitedChamber->chamberVisitHistory = [];
 
-                    $doctor_visits = $this->doctorVisit->where('mr_mobile_no', $mr_mobile_no)->where('doctor_mobile_no', $doctor_chamber->doctor_mobile_no)->get();
+                    $doctor_visits = $this->doctorVisit->where('mr_mobile_no', $mr_mobile_no)->where('doctor_mobile_no', $doctor_chamber->doctor_mobile_no)->where('doctor_chamber_id', $doctor_chamber->doctor_chamber_id)->get();
                     foreach($doctor_visits as $doctor_visit){
                         $chamberVisitHistory = (object)[];
                         $chamberVisitHistory->id = $doctor_visit->id;
@@ -160,6 +160,7 @@ class DoctorVisitHistoryController extends Controller
             $data->doctorFullname = $doctorVisit->doctor_fullname;
             $data->doctorDesignation = $doctorVisit->doctor_designation;
             $data->doctorEducation = $doctorVisit->doctor_education;
+            $data->doctorChamberId = $doctorVisit->doctor_chamber_id;
             $data->doctorChamberName = $doctorVisit->doctor_chamber_name;
             $data->doctorChamberAddress = $doctorVisit->doctor_chamber_address;
             $data->smVisitStart = $doctorVisit->visit_start;

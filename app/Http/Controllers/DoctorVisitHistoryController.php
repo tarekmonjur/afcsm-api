@@ -33,7 +33,39 @@ class DoctorVisitHistoryController extends Controller
     public function index($mr_mobile_no=null, $doctor_mobile_no=null)
     {
         try{
-            $data = $this->doctorVisit->get_doctor_visit_history($mr_mobile_no, $doctor_mobile_no);
+            $doctors = $this->doctorVisit->get_doctor($mr_mobile_no, $doctor_mobile_no);
+            $data = [];
+            foreach($doctors as $doctor){
+                $doctorObject = (object)[];
+                $doctorObject->doctorMobileNo = $doctor->doctor_mobile_no;
+                $doctorObject->doctorFullname = $doctor->doctor_fullname;
+                $doctorObject->doctorDesignation = $doctor->doctor_designation;
+                $doctorObject->doctorEducation = $doctor->doctor_education;
+                $doctorObject->doctorVisitedChamber = [];
+
+                $doctor_chambers = $this->doctorVisit->get_chamber($mr_mobile_no, $doctor->doctor_mobile_no);
+                foreach($doctor_chambers as $doctor_chamber){
+                    $doctorVisitedChamber = (object)[];
+                    $doctorVisitedChamber->doctorChamberId = $doctor_chamber->doctor_chamber_id;
+                    $doctorVisitedChamber->doctorChamberName = $doctor_chamber->doctor_chamber_name;
+                    $doctorVisitedChamber->doctorChamberAddress = $doctor_chamber->doctor_chamber_address;
+                    $doctorVisitedChamber->chamberVisitHistory = [];
+
+                    $doctor_visits = $this->doctorVisit->where('mr_mobile_no', $mr_mobile_no)->where('doctor_mobile_no', $doctor_chamber->doctor_mobile_no)->get();
+                    foreach($doctor_visits as $doctor_visit){
+                        $chamberVisitHistory = (object)[];
+                        $chamberVisitHistory->id = $doctor_visit->id;
+                        $chamberVisitHistory->smVisitStart = $doctor_visit->visit_start;
+                        $chamberVisitHistory->smVisitEnd = $doctor_visit->visit_end;
+                        $chamberVisitHistory->remarks = $doctor_visit->remarks;
+                        $chamberVisitHistory->totalVisitTime = $doctor_visit->total_visit_time;
+                        $doctorVisitedChamber->chamberVisitHistory[] = $chamberVisitHistory;
+                    }
+                    $doctorObject->doctorVisitedChamber[] = $doctorVisitedChamber;
+                }
+                $data[] = $doctorObject;
+            }
+
             return $this->setReturnMessage($data,'success','OK',200,'Success!','User doctor visit.');
         }catch (\Exception $e){
             return $this->setReturnMessage([],'error','NotOK',400,'Error!','Doctor visit not found.');
@@ -94,6 +126,7 @@ class DoctorVisitHistoryController extends Controller
             $doctorVisit->doctor_fullname = $request->input('doctorFullname');
             $doctorVisit->doctor_designation = $request->input('doctorDesignation');
             $doctorVisit->doctor_education = $request->input('doctorEducation');
+            $doctorVisit->doctor_chamber_id = $request->input('doctorChamberId');
             $doctorVisit->doctor_chamber_name = $request->input('doctorChamberName');
             $doctorVisit->doctor_chamber_address = $request->input('doctorChamberAddress');
             $doctorVisit->remarks = $request->input('remarks');

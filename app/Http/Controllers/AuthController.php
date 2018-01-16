@@ -359,7 +359,7 @@ class AuthController extends Controller
                 $reward_balance = 0.00;
                 //check for web company login
                 if($request->has('user_type')){
-                    if($request->input('user_type') == 'company' && $user->user_type != 'company'){
+                    if($request->input('user_type') == 'notmr' && $user->user_type == 'mr'){
                         return $this->setReturnMessage([], 'error', 'NotOK', 402, 'Verification!', 'Unauthorized account.');
                     }elseif($request->input('user_type') == 'mr' && $user->user_type == 'mr'){
                         $checkMR = $this->httpClient->sendRequest('POST', $this->smapi.'smart-marketeer-get-reward-balance-amount', ['mr_mobile_no' => $request->input('mobile_no')]);
@@ -379,6 +379,9 @@ class AuthController extends Controller
 
                     $userData = (object)[];
                     $userData->user_id = $user->id;
+                    if($request->input('user_type') == 'notmr'){
+                      $userData->user_type = $user->user_type;
+                    }
                     $userData->company_id = $user->company_id;
                     $userData->{'api-token'} = $user->api_token;
                     $userData->full_name = $user->full_name;

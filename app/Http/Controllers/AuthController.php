@@ -625,5 +625,23 @@ class AuthController extends Controller
     }
 
 
+    public function authTokenCheck(Request $request)
+    {
+        if ($request->has('api_token'))
+        {
+          $userData = User::select('users.id as user_id','users.full_name','users.mobile_no','users.email','users.city','users.gender','users.user_type','company.id','company.company_name')
+            ->where('api_token', $request->input('api_token'))
+            ->where('status', 'verified')
+            ->leftJoin('company','company.id','=','company.id')
+            ->first();
+          if($userData){
+            return $this->setReturnMessage($userData,'success','OK',200,'Success!','User fund!');
+          }      
+          return $this->setReturnMessage($userData,'success','NotOK',400,'Error!','User not fund!');
+        }
+        return $this->setReturnMessage((object)[],'error','NotOK',400,'Unauthorized!','Unauthorized Access!');
+    }
+
+
 
 }

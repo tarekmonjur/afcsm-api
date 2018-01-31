@@ -41,7 +41,7 @@ $router->group(['prefix' => env('APP_API_VERSION_0')], function() use ($router){
     $router->post('/user-checking', 'AuthController@userChecking');
     $router->post('/smart-mr-auth-check', 'AuthController@smartMrChecking');
     $router->post('/smart-mr-list', 'AuthController@smartMrList');
-
+    $router->post('/auth-token-check', 'AuthController@authTokenCheck');
 });
 
 
